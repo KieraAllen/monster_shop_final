@@ -2,25 +2,45 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get :root, to: 'welcome#index'
 
-  resources :merchants do
-    resources :items, only: [:index]
-  end
+  # comments are original code
 
-  resources :items, only: [:index, :show] do
-    resources :reviews, only: [:new, :create]
-  end
+  # resources :merchants do
+  get '/merchants', to: 'merchants#index'
+  post '/merchants', to: 'merchants#create'
+  get '/merchants/new', to: 'merchants#new'
+  get '/merchants/:id/edit', to: 'merchants#edit'
+  get '/merchants/:id', to: 'merchants#show'
+  patch '/merchants/:id', to: 'merchants#update'
+  delete '/merchants/:id', to: 'merchants#destroy'
+    #resources :items, only: [:index]
+    get '/merchants/:merchant_id/items', to: 'items#index'
+  # end
 
-  resources :reviews, only: [:edit, :update, :destroy]
+  # resources :items, only: [:index, :show] do
+  get '/items', to: 'items#index'
+  get '/items/:id', to: 'items#show'
+    # resources :reviews, only: [:new, :create]
+    get '/items/:item_id/reviews/new', to: 'reviews#new'
+    post '/items/:item_id/reviews', to: 'reviews#create'
+  # end
 
-  get '/cart', to: 'cart#show'
-  post '/cart/:item_id', to: 'cart#add_item'
-  delete '/cart', to: 'cart#empty'
+  # resources :reviews, only: [:edit, :update, :destroy]
+  get 'reviews/:id/edit', to: 'reviews#edit'
+  patch '/reviews/:id', to: 'reviews#update'
+  delete '/merchants:id', to: 'reviews#destroy'
+
+  resources :cart, only: [:show, :add_item, :empty]
+  # get '/cart', to: 'cart#show'
+  # post '/cart/:item_id', to: 'cart#add_item'
+  # delete '/cart', to: 'cart#empty'
   patch '/cart/:change/:item_id', to: 'cart#update_quantity'
   delete '/cart/:item_id', to: 'cart#remove_item'
 
   get '/registration', to: 'users#new', as: :registration
+
   resources :users, only: [:create, :update]
   patch '/user/:id', to: 'users#update'
+
   get '/profile', to: 'users#show'
   get '/profile/edit', to: 'users#edit'
   get '/profile/edit_password', to: 'users#edit_password'
@@ -40,13 +60,14 @@ Rails.application.routes.draw do
     put '/items/:id/change_status', to: 'items#change_status'
     get '/orders/:id/fulfill/:order_item_id', to: 'orders#fulfill'
 
-    get '/discounts/new', to: 'discounts#new'
-    get '/discounts', to: 'discounts#index'
-    get '/discounts/:id', to: 'discounts#show'
-    post '/discounts', to: 'discounts#create'
-    get '/discounts/:id/edit', to: 'discounts#edit'
-    patch '/discounts/:id', to: 'discounts#update'
-    delete '/discounts/:id', to: 'discounts#destroy'
+      resources :discounts
+      # get '/discounts/new', to: 'discounts#new'
+      # get '/discounts', to: 'discounts#index'
+      # get '/discounts/:id', to: 'discounts#show'
+      # post '/discounts', to: 'discounts#create'
+      # get '/discounts/:id/edit', to: 'discounts#edit'
+      # patch '/discounts/:id', to: 'discounts#update'
+      # delete '/discounts/:id', to: 'discounts#destroy'
   end
 
   namespace :admin do
